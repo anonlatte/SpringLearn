@@ -8,7 +8,7 @@ data class Student(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    val id: Int = 0,
+    val id: Long = 0,
     @Column(name = "name")
     val name: String = "",
     @Column(name = "surname")
@@ -18,3 +18,4 @@ data class Student(
     @Column(name = "age")
     val age: Int = 0
 )
+

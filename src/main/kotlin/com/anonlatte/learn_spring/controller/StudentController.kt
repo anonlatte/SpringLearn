@@ -1,7 +1,7 @@
 package com.anonlatte.learn_spring.controller
 
-import com.anonlatte.learn_spring.dao.StudentRepository
 import com.anonlatte.learn_spring.entity.Student
+import com.anonlatte.learn_spring.repository.StudentRepository
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -59,3 +59,4 @@ class StudentController(
         return "redirect:/list"
     }
 }
+
