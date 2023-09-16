@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotEmpty
 
 data class UserDto(
-    val id: Long = 0,
+    val id: Long? = 0,
 
     @NotEmpty
     val firstName: String = "",

@@ -3,23 +3,27 @@ package com.anonlatte.learn_spring.entity
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "USERS")
-data class User(
+@Table(name = TableNames.USERS)
+class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    val id: Long = 0,
+    var id: Long? = null,
+
     @Column(name = "name", nullable = false)
-    val name: String = "",
+    var name: String,
+
     @Column(name = "email", nullable = false, unique = true)
-    val email: String = "",
+    var email: String,
+
     @Column(name = "password", nullable = false)
-    val password: String = "",
+    var password: String,
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinTable(
-        name = "USER_ROLES",
+        name = TableNames.USER_ROLES,
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")]
     )
-    val roles: List<Role> = emptyList()
+    var roles: Set<Role>,
 )

@@ -3,19 +3,23 @@ package com.anonlatte.learn_spring.entity
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "STUDENTS")
-data class Student(
+@Table(name = TableNames.STUDENTS)
+class Student(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    val id: Long = 0,
+    var id: Long? = null,
+
     @Column(name = "name")
-    val name: String = "",
+    var name: String? = null,
+
     @Column(name = "surname")
-    val surname: String = "",
+    var surname: String? = null,
+
     @Column(name = "faculty")
-    val faculty: String = "",
+    var faculty: String? = null,
+
     @Column(name = "age")
-    val age: Int = 0
+    var age: Int? = null,
 )
 

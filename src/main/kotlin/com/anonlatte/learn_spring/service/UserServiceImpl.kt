@@ -2,12 +2,14 @@ package com.anonlatte.learn_spring.service
 
 import com.anonlatte.learn_spring.dto.UserDto
 import com.anonlatte.learn_spring.entity.Role
+import com.anonlatte.learn_spring.entity.RoleNames
 import com.anonlatte.learn_spring.entity.User
 import com.anonlatte.learn_spring.repository.RoleRepository
 import com.anonlatte.learn_spring.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UserServiceImpl @Autowired constructor(
@@ -16,13 +18,14 @@ class UserServiceImpl @Autowired constructor(
     private val passwordEncoder: PasswordEncoder
 ) : UserService {
 
+    @Transactional
     override fun save(userDto: UserDto) {
-        val role = roleRepository.findByName("ROLE_ADMIN") ?: checkRoleExists()
+        val role: Role = roleRepository.findByName(RoleNames.ROLE_ADMIN) ?: createRole()
         val user = User(
             name = "${userDto.firstName} ${userDto.lastName}",
             email = userDto.email,
             password = passwordEncoder.encode(userDto.password),
-            roles = listOfNotNull(role)
+            roles = setOf(role)
         )
         userRepository.save(user)
     }
@@ -43,8 +46,8 @@ class UserServiceImpl @Autowired constructor(
         password = password
     )
 
-    private fun checkRoleExists(): Role {
-        val role = Role(name = "ROLE_ADMIN")
+    private fun createRole(): Role {
+        val role = Role(name = RoleNames.ROLE_ADMIN)
         return roleRepository.save(role)
     }
 }

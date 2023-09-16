@@ -3,14 +3,16 @@ package com.anonlatte.learn_spring.entity
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "ROLES")
-data class Role(
+@Table(name = TableNames.ROLES)
+class Role(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    val id: Long = 0,
+    var id: Long? = null,
+
     @Column(name = "name", nullable = false, unique = true)
-    val name: String = "",
+    var name: String,
+
     @ManyToMany(mappedBy = "roles")
-    val users: List<User> = emptyList()
+    var users: Set<User>? = null,
 )
