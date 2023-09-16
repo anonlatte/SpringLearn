@@ -35,6 +35,9 @@ class WebSecurityConfig {
                     .requestMatchers(mvc.pattern("/index")).permitAll()
                     .requestMatchers(mvc.pattern("/list")).hasRole("ADMIN")
                     .requestMatchers(mvc.pattern("/users")).hasRole("ADMIN")
+                    .requestMatchers(mvc.pattern("/addStudentForm")).hasRole("ADMIN")
+                    .requestMatchers(mvc.pattern("/showUpdatedForm")).hasRole("ADMIN")
+                    .requestMatchers(mvc.pattern("/deleteStudent")).hasRole("ADMIN")
             }
             .formLogin {
                 it.loginPage("/login")
