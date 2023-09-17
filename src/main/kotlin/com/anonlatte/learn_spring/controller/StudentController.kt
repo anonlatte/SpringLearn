@@ -40,7 +40,7 @@ class StudentController(
         return "redirect:/list"
     }
 
-    @GetMapping("/showUpdatedForm")
+    @GetMapping("/showUpdateForm")
     fun getStudent(@RequestParam studentId: Long): ModelAndView {
         val modelAndView = ModelAndView("add-student-form")
         val optionalStudent = studentRepository.findById(studentId)
