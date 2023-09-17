@@ -4,17 +4,17 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "STUDENTS")
-data class Student(
+class Student(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    val id: Int = 0,
+    var id: Int? = null,
     @Column(name = "name")
-    val name: String = "",
+    var name: String? = null,
     @Column(name = "surname")
-    val surname: String = "",
+    var surname: String? = null,
     @Column(name = "faculty")
-    val faculty: String = "",
+    var faculty: String? = null,
     @Column(name = "age")
-    val age: Int = 0
+    var age: Int? = null,
 )
