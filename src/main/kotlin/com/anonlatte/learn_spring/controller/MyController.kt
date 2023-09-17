@@ -22,12 +22,12 @@ class MyController(
     }
 
     @PostMapping("/students")
-    fun saveStudent(student: Student): Student {
+    fun saveStudent(@RequestBody student: Student): Student {
         return studentService.saveStudent(student)
     }
 
     @PutMapping("/students")
-    fun updateStudent(student: Student): Student {
+    fun updateStudent(@RequestBody student: Student): Student {
         return studentService.saveStudent(student)
     }
 

@@ -10,11 +10,11 @@ class Student(
     @Column(name = "id")
     var id: Int? = null,
     @Column(name = "name")
-    var name: String? = null,
+    var name: String = "",
     @Column(name = "surname")
-    var surname: String? = null,
+    var surname: String = "",
     @Column(name = "faculty")
-    var faculty: String? = null,
+    var faculty: String = "",
     @Column(name = "age")
-    var age: Int? = null,
+    var age: Int = 0,
 )
