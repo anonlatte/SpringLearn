@@ -1,7 +1,7 @@
 package com.anonlatte.learn_spring.controller
 
+import com.anonlatte.learn_spring.domain.service.UserService
 import com.anonlatte.learn_spring.dto.UserDto
-import com.anonlatte.learn_spring.service.UserService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
@@ -13,14 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping
 class SecurityController(private val userService: UserService) {
 
     @GetMapping("/index")
-    fun index(): String {
-        return "index"
-    }
+    fun index(): String = "index"
 
     @GetMapping("/login")
-    fun login(): String {
-        return "login"
-    }
+    fun login(): String = "login"
 
     @GetMapping("/register")
     fun showRegistrationForm(model: Model): String {

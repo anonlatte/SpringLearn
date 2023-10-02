@@ -1,6 +1,6 @@
 package com.anonlatte.learn_spring.service
 
-import com.anonlatte.learn_spring.repository.UserRepository
+import com.anonlatte.learn_spring.domain.repository.UserRepository
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails

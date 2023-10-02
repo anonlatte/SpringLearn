@@ -1,4 +1,4 @@
-package com.anonlatte.learn_spring.entity
+package com.anonlatte.learn_spring.db.entity
 
 import jakarta.persistence.*
 

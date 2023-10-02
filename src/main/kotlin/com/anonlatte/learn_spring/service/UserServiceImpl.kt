@@ -1,11 +1,12 @@
 package com.anonlatte.learn_spring.service
 
+import com.anonlatte.learn_spring.db.entity.Role
+import com.anonlatte.learn_spring.db.entity.RoleNames
+import com.anonlatte.learn_spring.db.entity.User
+import com.anonlatte.learn_spring.domain.repository.RoleRepository
+import com.anonlatte.learn_spring.domain.repository.UserRepository
+import com.anonlatte.learn_spring.domain.service.UserService
 import com.anonlatte.learn_spring.dto.UserDto
-import com.anonlatte.learn_spring.entity.Role
-import com.anonlatte.learn_spring.entity.RoleNames
-import com.anonlatte.learn_spring.entity.User
-import com.anonlatte.learn_spring.repository.RoleRepository
-import com.anonlatte.learn_spring.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service

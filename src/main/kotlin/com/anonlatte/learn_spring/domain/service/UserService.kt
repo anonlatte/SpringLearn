@@ -1,7 +1,7 @@
-package com.anonlatte.learn_spring.service
+package com.anonlatte.learn_spring.domain.service
 
+import com.anonlatte.learn_spring.db.entity.User
 import com.anonlatte.learn_spring.dto.UserDto
-import com.anonlatte.learn_spring.entity.User
 
 interface UserService {
     fun save(userDto: UserDto)
