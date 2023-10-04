@@ -18,7 +18,7 @@ class StudentController(
 
     private val logger = LoggerFactory.getLogger(StudentController::class.java)
 
-    @GetMapping("/list", "/")
+    @GetMapping("students/list")
     fun getStudents(): ModelAndView {
         logger.info("/list -> connection")
         val modelAndView = ModelAndView("list-students")
@@ -26,7 +26,7 @@ class StudentController(
         return modelAndView
     }
 
-    @GetMapping("/addStudentForm")
+    @GetMapping("students/add")
     fun getStudent(): ModelAndView {
         val modelAndView = ModelAndView("add-student-form")
         val student = Student()
@@ -34,13 +34,13 @@ class StudentController(
         return modelAndView
     }
 
-    @PostMapping("/saveStudent")
+    @PostMapping("students/save")
     fun saveStudent(@ModelAttribute student: Student): String {
         studentRepository.save(student)
         return "redirect:/list"
     }
 
-    @GetMapping("/showUpdateForm")
+    @GetMapping("students/update")
     fun getStudent(@RequestParam studentId: Long): ModelAndView {
         val modelAndView = ModelAndView("add-student-form")
         val optionalStudent = studentRepository.findById(studentId)
@@ -53,7 +53,7 @@ class StudentController(
         return modelAndView
     }
 
-    @GetMapping("/deleteStudent")
+    @GetMapping("students/delete")
     fun deleteStudent(@RequestParam studentId: Long): String {
         studentRepository.deleteById(studentId)
         return "redirect:/list"
