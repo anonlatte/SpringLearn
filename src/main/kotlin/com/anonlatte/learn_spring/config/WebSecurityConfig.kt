@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher
+import org.springframework.security.web.util.matcher.RegexRequestMatcher.regexMatcher
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector
 
 
@@ -36,18 +37,15 @@ class WebSecurityConfig {
             .addFilterAfter(LoginPageFilter(), UsernamePasswordAuthenticationFilter::class.java)
             .authorizeHttpRequests {
                 it.requestMatchers(antMatcher("/register/**")).permitAll()
-                    .requestMatchers(mvc.pattern("/index")).permitAll()
-                    .requestMatchers(mvc.pattern("/list")).hasRole("ADMIN")
-                    .requestMatchers(mvc.pattern("/users")).hasRole("ADMIN")
-                    .requestMatchers(mvc.pattern("/addStudentForm")).permitAll()
-                    .requestMatchers(mvc.pattern("/showUpdateForm")).permitAll()
-                    .requestMatchers(mvc.pattern("/deleteStudent")).permitAll()
-                    .requestMatchers(mvc.pattern("/saveStudent")).permitAll()
+                    .requestMatchers(regexMatcher("(/index)|(/)")).permitAll()
+                    .requestMatchers(regexMatcher("/users")).hasAuthority(RoleNames.ROLE_ADMIN)
+                    .requestMatchers(antMatcher("/students/**")).hasAnyRole(RoleNames.ROLE_ADMIN, RoleNames.ROLE_USER)
+                    .anyRequest().hasAnyAuthority(RoleNames.ROLE_ADMIN, RoleNames.ROLE_USER)
             }
             .formLogin {
                 it.loginPage("/login")
                     .loginProcessingUrl("/login")
-                    .defaultSuccessUrl("/users")
+                    .defaultSuccessUrl("/")
                     .permitAll()
             }
             .logout {
