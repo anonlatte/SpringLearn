@@ -2,6 +2,7 @@ package com.anonlatte.learn_spring.controller
 
 import com.anonlatte.learn_spring.domain.service.UserService
 import com.anonlatte.learn_spring.dto.UserDto
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
@@ -52,7 +53,9 @@ class SecurityController(private val userService: UserService) {
     @GetMapping("/users")
     fun getUsers(model: Model): String {
         val users = userService.findAll()
+        val currentUserEmail = SecurityContextHolder.getContext().authentication?.name.orEmpty()
         model.addAttribute("users", users)
+        model.addAttribute("currentUserEmail", currentUserEmail)
         return "users"
     }
 }
