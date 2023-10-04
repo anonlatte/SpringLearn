@@ -22,17 +22,18 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a aria-current="page" class="nav-link active" th:href="@{/login}">Login</a>
+                    <a aria-current="page" class="nav-link active" th:href="@{/logout}">Logout</a>
                 </li>
                 <li class="nav-item">
-                    <a aria-current="page" class="nav-link active" th:href="@{/register}">Register</a>
+                    <a aria-current="page" class="nav-link active" th:href="@{/users}">Users</a>
                 </li>
+            </ul>
         </div>
     </div>
 </nav>
 <div class="container">
     <hr/>
-    <a class="btn btn-primary" th:href="@{/addStudentForm}">Add Student</a>
+    <a class="btn btn-primary" th:href="@{/students/add}">Add Student</a>
     <br/><br/>
     <table class="table table-bordered table-striped" id="studentTable">
         <thead>
@@ -50,8 +51,8 @@
             <td th:text="${student.faculty}"/>
             <td th:text="${student.age}"/>
             <td>
-                <a class="btn btninfo" th:href="@{/showUpdateForm(studentId=${student.id})}">Update</a>
-                <a class="btn btn-danger ml2" th:href="@{/deleteStudent(studentId=${student.id})}">Delete</a>
+                <a class="btn btninfo" th:href="@{/students/update(studentId=${student.id})}">Update</a>
+                <a class="btn btn-danger ml2" th:href="@{/students/delete(studentId=${student.id})}">Delete</a>
             </td>
         </tr>
         </tbody>

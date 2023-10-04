@@ -19,12 +19,12 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a aria-current="page" class="nav-link active" th:href="@{/login}">Login</a>
+                    <a aria-current="page" class="nav-link active" th:href="@{/logout}">Logout</a>
                 </li>
                 <li class="nav-item">
-                    <a aria-current="page" class="nav-link active"
-                       th:href="@{/register}">Register</a>
+                    <a aria-current="page" class="nav-link active" th:href="@{/users}">Users</a>
                 </li>
+            </ul>
         </div>
     </div>
 </nav>
@@ -32,7 +32,7 @@
     <hr/>
     <h3>Add New Student</h3>
     <hr/>
-    <form method="POST" th:action="@{/saveStudent}" th:object="${student}">
+    <form method="POST" th:action="@{/students/save}" th:object="${student}">
         <input class="form-control col-4 mb-4" placeholder="Enter Name" th:field="*{name}" type="text"/>
         <input class="form-control col-4 mb-4" placeholder="Enter Surname" th:field="*{surname}" type="text"/>
         <input class="form-control col-4 mb-4" placeholder="Enter Faculty" th:field="*{faculty}" type="text"/>
@@ -41,7 +41,7 @@
         <input th:field="*{id}" type="hidden"/>
     </form>
     <hr/>
-    <a th:href="@{/list}">Back to list</a>
+    <a th:href="@{/students}">Back to list</a>
 </div>
 </body>
 </html>
