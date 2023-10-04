@@ -3,6 +3,7 @@ package com.anonlatte.learn_spring.service
 import com.anonlatte.learn_spring.db.entity.Role
 import com.anonlatte.learn_spring.db.entity.RoleNames
 import com.anonlatte.learn_spring.db.entity.User
+import com.anonlatte.learn_spring.db.entity.User.Companion.toDto
 import com.anonlatte.learn_spring.domain.repository.RoleRepository
 import com.anonlatte.learn_spring.domain.repository.UserRepository
 import com.anonlatte.learn_spring.domain.service.UserService
@@ -23,6 +24,7 @@ class UserServiceImpl @Autowired constructor(
     override fun save(userDto: UserDto) {
         val role: Role = roleRepository.findByName(RoleNames.ROLE_USER) ?: createRole(RoleNames.ROLE_USER)
         val user = User(
+            id = userDto.id,
             name = "${userDto.firstName} ${userDto.lastName}",
             email = userDto.email,
             password = passwordEncoder.encode(userDto.password),
@@ -36,6 +38,8 @@ class UserServiceImpl @Autowired constructor(
         return userRepository.findByEmail(email)
     }
 
+    override fun getById(id: Long): User? = userRepository.findById(id).orElse(null)
+
     override fun findAll(): List<UserDto> {
         return userRepository.findAll().map { it.toDto() }
     }
@@ -44,13 +48,17 @@ class UserServiceImpl @Autowired constructor(
         userRepository.deleteById(id)
     }
 
-    private fun User.toDto() = UserDto(
-        id = id,
-        firstName = name.split(" ")[0],
-        lastName = name.split(" ")[1],
-        email = email,
-        password = password
-    )
+    override fun updateRoles(userDto: UserDto, roles: Set<Role>) {
+        val user = User(
+            id = userDto.id,
+            name = "${userDto.firstName} ${userDto.lastName}",
+            email = userDto.email,
+            password = passwordEncoder.encode(userDto.password),
+            roles = roles,
+            employees = emptySet()
+        )
+        userRepository.save(user)
+    }
 
     private fun createRole(roleName: String): Role {
         val role = Role(name = roleName)

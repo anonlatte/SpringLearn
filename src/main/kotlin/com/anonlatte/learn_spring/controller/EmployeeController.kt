@@ -1,14 +1,11 @@
 package com.anonlatte.learn_spring.controller
 
 import com.anonlatte.learn_spring.db.entity.Employee
-import com.anonlatte.learn_spring.db.entity.RoleNames
 import com.anonlatte.learn_spring.db.entity.User
 import com.anonlatte.learn_spring.domain.repository.EmployeeRepository
 import com.anonlatte.learn_spring.domain.repository.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.GetMapping
@@ -25,25 +22,19 @@ class EmployeeController @Autowired constructor(
 
     private val logger = LoggerFactory.getLogger(EmployeeController::class.java)
 
-    private val currentAuth: Authentication?
-        get() = SecurityContextHolder.getContext().authentication
-    private val isAdmin: Boolean
-        get() = currentAuth?.authorities.orEmpty()
-            .any { it.authority == RoleNames.ROLE_ADMIN }
-
     @Transactional
     @GetMapping("/employees")
     fun getEmployees(): ModelAndView {
-        logger.info("/list -> connection; isAdmin: $isAdmin")
+        logger.info("/list -> connection; isAdmin: ${SecurityData.isAdmin}")
         val modelAndView = ModelAndView("list-employees")
         modelAndView.addObject(
-            "employees", if (isAdmin) {
+            "employees", if (SecurityData.isAdmin) {
                 employeeRepository.findAll()
             } else {
                 getCurrentUser()?.employees.orEmpty()
             }
         )
-        modelAndView.addObject("isAdmin", isAdmin)
+        modelAndView.addObject("isAdmin", SecurityData.isAdmin)
         return modelAndView
     }
 
@@ -53,7 +44,7 @@ class EmployeeController @Autowired constructor(
         val modelAndView = ModelAndView("add-employee-form")
         val employee = Employee(users = setOfNotNull(getCurrentUser()))
         modelAndView.addObject("employee", employee)
-        modelAndView.addObject("isAdmin", isAdmin)
+        modelAndView.addObject("isAdmin", SecurityData.isAdmin)
         return modelAndView
     }
 
@@ -78,7 +69,7 @@ class EmployeeController @Autowired constructor(
             Employee(users = setOfNotNull(getCurrentUser()))
         }
         modelAndView.addObject("employee", employee)
-        modelAndView.addObject("isAdmin", isAdmin)
+        modelAndView.addObject("isAdmin", SecurityData.isAdmin)
         return modelAndView
     }
 
@@ -89,7 +80,7 @@ class EmployeeController @Autowired constructor(
     }
 
     private fun getCurrentUser(): User? {
-        return currentAuth?.name.orEmpty().let {
+        return SecurityData.currentAuth?.name.orEmpty().let {
             userRepository.findByEmail(it)
         }
     }

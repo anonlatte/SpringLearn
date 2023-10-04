@@ -1,15 +1,27 @@
 package com.anonlatte.learn_spring.controller
 
+import com.anonlatte.learn_spring.db.entity.Role
+import com.anonlatte.learn_spring.db.entity.RoleNames
+import com.anonlatte.learn_spring.db.entity.User.Companion.toDto
+import com.anonlatte.learn_spring.domain.repository.RoleRepository
 import com.anonlatte.learn_spring.domain.service.UserService
 import com.anonlatte.learn_spring.dto.UserDto
+import org.slf4j.LoggerFactory
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.ModelAndView
 
 @Controller
-class SecurityController(private val userService: UserService) {
+class SecurityController(
+    private val userService: UserService,
+    private val roleRepository: RoleRepository
+) {
+
+    private val logger = LoggerFactory.getLogger(SecurityController::class.java)
 
     @GetMapping("/index")
     fun index(): String = "index"
@@ -62,4 +74,34 @@ class SecurityController(private val userService: UserService) {
         userService.deleteById(id)
         return "redirect:/users"
     }
+
+    @RequestMapping("/users/updateRole")
+    fun changeRole(@RequestParam("userId") userId: Long): ModelAndView {
+        val isUserAdmin = userService.getById(userId)?.roles?.any { it.name == RoleNames.ROLE_ADMIN } == true
+        return ModelAndView("change-role")
+            .addObject("roleChange", RoleChangeDto(isUserAdmin))
+            .addObject("userId", userId)
+    }
+
+    @Transactional
+    @RequestMapping("/users/updateRole", method = [RequestMethod.POST])
+    fun updateRole(
+        @RequestParam userId: Long,
+        @ModelAttribute roleChange: RoleChangeDto
+    ): String {
+
+        userService.getById(userId)?.run {
+            val roles: Set<Role> = roleRepository.findByName(RoleNames.ROLE_ADMIN)?.let {
+                if (roleChange.isAdmin == null) {
+                    roles.plus(it)
+                } else {
+                    roles.minus(it)
+                }
+            }.orEmpty()
+            userService.updateRoles(this.toDto(), roles)
+            logger.info("User $email has been updated to ${if (roleChange.isAdmin == null) "admin" else "user"}")
+        }
+        return "redirect:/users"
+    }
 }
+

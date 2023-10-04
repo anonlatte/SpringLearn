@@ -1,5 +1,6 @@
 package com.anonlatte.learn_spring.db.entity
 
+import com.anonlatte.learn_spring.dto.UserDto
 import jakarta.persistence.*
 
 @Entity
@@ -34,4 +35,16 @@ class User(
         inverseJoinColumns = [JoinColumn(name = "employee_id")]
     )
     var employees: Set<Employee>,
-)
+) {
+
+    companion object {
+
+        fun User.toDto() = UserDto(
+            id = id,
+            firstName = name.split(" ")[0],
+            lastName = name.split(" ")[1],
+            email = email,
+            password = password
+        )
+    }
+}
