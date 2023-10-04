@@ -35,7 +35,7 @@
     <form method="POST" th:action="@{/employees/save}" th:object="${employee}">
         <input class="form-control col-4 mb-4" placeholder="Enter Name" th:field="*{name}" type="text"/>
         <input class="form-control col-4 mb-4" placeholder="Enter Surname" th:field="*{surname}" type="text"/>
-        <input class="form-control col-4 mb-4" placeholder="Enter Faculty" th:field="*{faculty}" type="text"/>
+        <input class="form-control col-4 mb-4" placeholder="Enter Department" th:field="*{department}" type="text"/>
         <input class="form-control col-4 mb-4" placeholder="Enter Age" th:field="*{age}" type="text"/>
         <button class="btn btn-primary col-2" type="submit">Save</button>
         <input th:field="*{id}" type="hidden"/>

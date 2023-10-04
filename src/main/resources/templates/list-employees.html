@@ -40,15 +40,16 @@
         <tr>
             <th>Name</th>
             <th>Surname</th>
-            <th>Faculty</th>
+            <th>Department</th>
             <th>Age</th>
+            <th>Edit</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="employee: ${employees}">
             <td th:text="${employee.surname}"/>
             <td th:text="${employee.name}"/>
-            <td th:text="${employee.faculty}"/>
+            <td th:text="${employee.department}"/>
             <td th:text="${employee.age}"/>
             <td>
                 <a class="btn btninfo" th:href="@{/employees/update(employeeId=${employee.id})}">Update</a>

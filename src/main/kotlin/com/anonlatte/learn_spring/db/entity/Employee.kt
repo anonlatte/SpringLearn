@@ -16,8 +16,8 @@ class Employee(
     @Column(name = "surname")
     var surname: String? = null,
 
-    @Column(name = "faculty")
-    var faculty: String? = null,
+    @Column(name = "department")
+    var department: String? = null,
 
     @Column(name = "age")
     var age: Int? = null,
