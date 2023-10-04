@@ -3,8 +3,8 @@ package com.anonlatte.learn_spring.db.entity
 import jakarta.persistence.*
 
 @Entity
-@Table(name = TableNames.STUDENTS)
-class Student(
+@Table(name = TableNames.EMPLOYEES)
+class Employee(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

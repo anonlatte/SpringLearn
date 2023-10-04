@@ -24,7 +24,7 @@ class LoginPageFilter : GenericFilterBean() {
         if (redirectRequired) {
             val redirectUrl = when (authRole.first().authority) {
                 RoleNames.ROLE_ADMIN -> "/users"
-                RoleNames.ROLE_USER -> "/students"
+                RoleNames.ROLE_USER -> "/employees"
                 else -> "/"
             }
             val encodeRedirectURL = res.encodeRedirectURL(req.contextPath + redirectUrl)

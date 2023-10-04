@@ -1,6 +1,6 @@
 package com.anonlatte.learn_spring.domain.repository
 
-import com.anonlatte.learn_spring.db.entity.Student
+import com.anonlatte.learn_spring.db.entity.Employee
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface StudentRepository : JpaRepository<Student, Long>
+interface EmployeeRepository : JpaRepository<Employee, Long>
