@@ -4,6 +4,7 @@ import com.anonlatte.learn_spring.db.entity.Employee
 import com.anonlatte.learn_spring.domain.repository.EmployeeRepository
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
@@ -17,12 +18,15 @@ class EmployeeController(
 ) {
 
     private val logger = LoggerFactory.getLogger(EmployeeController::class.java)
+    private val isAdmin = SecurityContextHolder.getContext().authentication?.authorities.orEmpty()
+        .any { it.authority == "ROLE_ADMIN" }
 
     @GetMapping("/employees")
     fun getEmployees(): ModelAndView {
         logger.info("/list -> connection")
         val modelAndView = ModelAndView("list-employees")
         modelAndView.addObject("employees", employeRepository.findAll())
+        modelAndView.addObject("isAdmin", isAdmin)
         return modelAndView
     }
 
@@ -31,6 +35,7 @@ class EmployeeController(
         val modelAndView = ModelAndView("add-employee-form")
         val employee = Employee()
         modelAndView.addObject("employee", employee)
+        modelAndView.addObject("isAdmin", isAdmin)
         return modelAndView
     }
 
@@ -50,6 +55,7 @@ class EmployeeController(
             Employee()
         }
         modelAndView.addObject("employee", employee)
+        modelAndView.addObject("isAdmin", isAdmin)
         return modelAndView
     }
 

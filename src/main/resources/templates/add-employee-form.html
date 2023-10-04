@@ -21,7 +21,7 @@
                 <li class="nav-item">
                     <a aria-current="page" class="nav-link active" th:href="@{/logout}">Logout</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" th:if="${isAdmin}">
                     <a aria-current="page" class="nav-link active" th:href="@{/users}">Users</a>
                 </li>
             </ul>
