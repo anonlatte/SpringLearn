@@ -21,7 +21,7 @@ class UserServiceImpl @Autowired constructor(
 
     @Transactional
     override fun save(userDto: UserDto) {
-        val role: Role = roleRepository.findByName(RoleNames.ROLE_ADMIN) ?: createRole()
+        val role: Role = roleRepository.findByName(RoleNames.ROLE_USER) ?: createRole(RoleNames.ROLE_USER)
         val user = User(
             name = "${userDto.firstName} ${userDto.lastName}",
             email = userDto.email,
@@ -51,8 +51,8 @@ class UserServiceImpl @Autowired constructor(
         password = password
     )
 
-    private fun createRole(): Role {
-        val role = Role(name = RoleNames.ROLE_ADMIN)
+    private fun createRole(roleName: String): Role {
+        val role = Role(name = roleName)
         return roleRepository.save(role)
     }
 }
