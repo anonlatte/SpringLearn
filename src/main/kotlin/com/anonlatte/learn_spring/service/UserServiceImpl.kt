@@ -26,7 +26,8 @@ class UserServiceImpl @Autowired constructor(
             name = "${userDto.firstName} ${userDto.lastName}",
             email = userDto.email,
             password = passwordEncoder.encode(userDto.password),
-            roles = setOf(role)
+            roles = setOf(role),
+            employees = emptySet()
         )
         userRepository.save(user)
     }

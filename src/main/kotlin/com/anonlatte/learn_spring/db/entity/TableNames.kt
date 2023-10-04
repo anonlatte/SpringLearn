@@ -5,4 +5,5 @@ object TableNames {
     const val USERS = "USERS"
     const val EMPLOYEES = "EMPLOYEES"
     const val USER_ROLES = "USER_ROLES"
+    const val USERS_EMPLOYEES = "USERS_EMPLOYEES"
 }

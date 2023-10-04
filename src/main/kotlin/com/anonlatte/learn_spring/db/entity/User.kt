@@ -26,4 +26,12 @@ class User(
         inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")]
     )
     var roles: Set<Role>,
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @JoinTable(
+        name = TableNames.USERS_EMPLOYEES,
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "employee_id")]
+    )
+    var employees: Set<Employee>,
 )

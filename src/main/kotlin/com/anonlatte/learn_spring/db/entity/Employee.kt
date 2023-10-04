@@ -21,5 +21,8 @@ class Employee(
 
     @Column(name = "age")
     var age: Int? = null,
+
+    @ManyToMany(mappedBy = "employees")
+    var users: Set<User>? = null,
 )
 
