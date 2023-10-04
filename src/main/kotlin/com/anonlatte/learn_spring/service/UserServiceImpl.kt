@@ -39,6 +39,10 @@ class UserServiceImpl @Autowired constructor(
         return userRepository.findAll().map { it.toDto() }
     }
 
+    override fun deleteById(id: Long) {
+        userRepository.deleteById(id)
+    }
+
     private fun User.toDto() = UserDto(
         id = id,
         firstName = name.split(" ")[0],

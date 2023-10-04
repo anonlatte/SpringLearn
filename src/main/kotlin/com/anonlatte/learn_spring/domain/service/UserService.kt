@@ -9,4 +9,6 @@ interface UserService {
     fun findByEmail(email: String): User?
 
     fun findAll(): List<UserDto>
+
+    fun deleteById(id: Long)
 }

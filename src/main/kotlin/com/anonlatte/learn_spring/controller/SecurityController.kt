@@ -6,9 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.ModelAttribute
-import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.*
 
 @Controller
 class SecurityController(private val userService: UserService) {
@@ -57,5 +55,11 @@ class SecurityController(private val userService: UserService) {
         model.addAttribute("users", users)
         model.addAttribute("currentUserEmail", currentUserEmail)
         return "users"
+    }
+
+    @RequestMapping("/users/delete")
+    fun deleteUser(@RequestParam("userId") id: Long): String {
+        userService.deleteById(id)
+        return "redirect:/users"
     }
 }

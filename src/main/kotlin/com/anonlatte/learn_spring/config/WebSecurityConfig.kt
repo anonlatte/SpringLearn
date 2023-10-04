@@ -38,7 +38,7 @@ class WebSecurityConfig {
             .authorizeHttpRequests {
                 it.requestMatchers(antMatcher("/register/**")).permitAll()
                     .requestMatchers(regexMatcher("(/index)|(/)")).permitAll()
-                    .requestMatchers(regexMatcher("/users")).hasAuthority(RoleNames.ROLE_ADMIN)
+                    .requestMatchers(antMatcher("/users/**")).hasAuthority(RoleNames.ROLE_ADMIN)
                     .anyRequest().hasAnyAuthority(RoleNames.ROLE_ADMIN, RoleNames.ROLE_USER)
             }
             .formLogin {
