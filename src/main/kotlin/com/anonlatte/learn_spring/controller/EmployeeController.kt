@@ -1,11 +1,13 @@
 package com.anonlatte.learn_spring.controller
 
 import com.anonlatte.learn_spring.db.entity.Employee
+import com.anonlatte.learn_spring.db.entity.RoleNames
 import com.anonlatte.learn_spring.db.entity.User
 import com.anonlatte.learn_spring.domain.repository.EmployeeRepository
 import com.anonlatte.learn_spring.domain.repository.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.annotation.Transactional
@@ -23,14 +25,16 @@ class EmployeeController @Autowired constructor(
 
     private val logger = LoggerFactory.getLogger(EmployeeController::class.java)
 
-    private val currentAuth = SecurityContextHolder.getContext().authentication
-    private val isAdmin = currentAuth?.authorities.orEmpty()
-        .any { it.authority == "ROLE_ADMIN" }
+    private val currentAuth: Authentication?
+        get() = SecurityContextHolder.getContext().authentication
+    private val isAdmin: Boolean
+        get() = currentAuth?.authorities.orEmpty()
+            .any { it.authority == RoleNames.ROLE_ADMIN }
 
     @Transactional
     @GetMapping("/employees")
     fun getEmployees(): ModelAndView {
-        logger.info("/list -> connection")
+        logger.info("/list -> connection; isAdmin: $isAdmin")
         val modelAndView = ModelAndView("list-employees")
         modelAndView.addObject(
             "employees", if (isAdmin) {
@@ -57,7 +61,7 @@ class EmployeeController @Autowired constructor(
     fun saveEmployee(@ModelAttribute employee: Employee): String {
         employeeRepository.save(employee)
         getCurrentUser()?.let {
-            it.employees = it.employees.orEmpty().plus(employee)
+            it.employees = it.employees.plus(employee)
             userRepository.save(it)
         }
         return "redirect:/employees"
