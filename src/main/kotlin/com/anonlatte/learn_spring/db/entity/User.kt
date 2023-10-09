@@ -20,7 +20,7 @@ class User(
     @Column(name = "password", nullable = false)
     var password: String,
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.DETACH])
+    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinTable(
         name = TableNames.USER_ROLES,
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],

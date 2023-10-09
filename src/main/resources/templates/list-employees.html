@@ -52,7 +52,7 @@
             <td th:text="${employee.department}"/>
             <td th:text="${employee.age}"/>
             <td>
-                <a class="btn btninfo" th:href="@{/employees/update(employeeId=${employee.id})}">Update</a>
+                <a class="btn btn-info" th:href="@{/employees/update(employeeId=${employee.id})}">Update</a>
                 <a class="btn btn-danger ml2" th:href="@{/employees/delete(employeeId=${employee.id})}">Delete</a>
             </td>
         </tr>
