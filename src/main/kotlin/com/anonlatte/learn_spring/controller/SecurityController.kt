@@ -4,6 +4,7 @@ import com.anonlatte.learn_spring.db.entity.Role
 import com.anonlatte.learn_spring.db.entity.RoleNames
 import com.anonlatte.learn_spring.db.entity.User.Companion.toDto
 import com.anonlatte.learn_spring.domain.repository.RoleRepository
+import com.anonlatte.learn_spring.domain.repository.UserLogRepository
 import com.anonlatte.learn_spring.domain.service.UserService
 import com.anonlatte.learn_spring.dto.UserDto
 import org.slf4j.LoggerFactory
@@ -18,7 +19,8 @@ import org.springframework.web.servlet.ModelAndView
 @Controller
 class SecurityController(
     private val userService: UserService,
-    private val roleRepository: RoleRepository
+    private val roleRepository: RoleRepository,
+    private val userLogRepository: UserLogRepository,
 ) {
 
     private val logger = LoggerFactory.getLogger(SecurityController::class.java)
@@ -55,6 +57,14 @@ class SecurityController(
             model.addAttribute("user", userDto)
             "register"
         } else {
+            userLogRepository.save(
+                SecurityContextHolder.getContext().authentication?.name.orEmpty().let {
+                    com.anonlatte.learn_spring.db.entity.UserLog(
+                        user = it,
+                        action = "user created",
+                    )
+                }
+            )
             userService.save(userDto)
             "redirect:/register?success"
         }
@@ -66,18 +76,42 @@ class SecurityController(
         val currentUserEmail = SecurityContextHolder.getContext().authentication?.name.orEmpty()
         model.addAttribute("users", users)
         model.addAttribute("currentUserEmail", currentUserEmail)
+        userLogRepository.save(
+            SecurityContextHolder.getContext().authentication?.name.orEmpty().let {
+                com.anonlatte.learn_spring.db.entity.UserLog(
+                    user = it,
+                    action = "users read",
+                )
+            }
+        )
         return "users"
     }
 
     @RequestMapping("/users/delete")
     fun deleteUser(@RequestParam("userId") id: Long): String {
         userService.deleteById(id)
+        userLogRepository.save(
+            SecurityContextHolder.getContext().authentication?.name.orEmpty().let {
+                com.anonlatte.learn_spring.db.entity.UserLog(
+                    user = it,
+                    action = "user deleted",
+                )
+            }
+        )
         return "redirect:/users"
     }
 
     @RequestMapping("/users/updateRole")
     fun changeRole(@RequestParam("userId") userId: Long): ModelAndView {
         val isUserAdmin = userService.getById(userId)?.roles?.any { it.name == RoleNames.ROLE_ADMIN } == true
+        userLogRepository.save(
+            SecurityContextHolder.getContext().authentication?.name.orEmpty().let {
+                com.anonlatte.learn_spring.db.entity.UserLog(
+                    user = it,
+                    action = "user role change",
+                )
+            }
+        )
         return ModelAndView("change-role")
             .addObject("roleChange", RoleChangeDto(isUserAdmin))
             .addObject("userId", userId)
@@ -101,6 +135,14 @@ class SecurityController(
             userService.updateRoles(this.toDto(), roles)
             logger.info("User $email has been updated to ${if (roleChange.isAdmin == null) "admin" else "user"}")
         }
+        userLogRepository.save(
+            SecurityContextHolder.getContext().authentication?.name.orEmpty().let {
+                com.anonlatte.learn_spring.db.entity.UserLog(
+                    user = it,
+                    action = "user role changed",
+                )
+            }
+        )
         return "redirect:/users"
     }
 }

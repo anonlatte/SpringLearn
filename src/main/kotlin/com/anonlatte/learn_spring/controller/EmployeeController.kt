@@ -2,7 +2,9 @@ package com.anonlatte.learn_spring.controller
 
 import com.anonlatte.learn_spring.db.entity.Employee
 import com.anonlatte.learn_spring.db.entity.User
+import com.anonlatte.learn_spring.db.entity.UserLog
 import com.anonlatte.learn_spring.domain.repository.EmployeeRepository
+import com.anonlatte.learn_spring.domain.repository.UserLogRepository
 import com.anonlatte.learn_spring.domain.repository.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,7 +19,8 @@ import org.springframework.web.servlet.ModelAndView
 @Controller
 class EmployeeController @Autowired constructor(
     private val employeeRepository: EmployeeRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val userLogRepository: UserLogRepository,
 ) {
 
     private val logger = LoggerFactory.getLogger(EmployeeController::class.java)
@@ -35,6 +38,14 @@ class EmployeeController @Autowired constructor(
             }
         )
         modelAndView.addObject("isAdmin", SecurityData.isAdmin)
+        userLogRepository.save(
+            SecurityData.currentAuth?.name.orEmpty().let {
+                UserLog(
+                    user = it,
+                    action = "employees read",
+                )
+            }
+        )
         return modelAndView
     }
 
@@ -45,6 +56,14 @@ class EmployeeController @Autowired constructor(
         val employee = Employee(users = setOfNotNull(getCurrentUser()))
         modelAndView.addObject("employee", employee)
         modelAndView.addObject("isAdmin", SecurityData.isAdmin)
+        userLogRepository.save(
+            SecurityData.currentAuth?.name.orEmpty().let {
+                UserLog(
+                    user = it,
+                    action = "employees add",
+                )
+            }
+        )
         return modelAndView
     }
 
@@ -55,6 +74,14 @@ class EmployeeController @Autowired constructor(
             it.employees = it.employees.plus(employee)
             userRepository.save(it)
         }
+        userLogRepository.save(
+            SecurityData.currentAuth?.name.orEmpty().let {
+                UserLog(
+                    user = it,
+                    action = "employees save",
+                )
+            }
+        )
         return "redirect:/employees"
     }
 
@@ -70,12 +97,28 @@ class EmployeeController @Autowired constructor(
         }
         modelAndView.addObject("employee", employee)
         modelAndView.addObject("isAdmin", SecurityData.isAdmin)
+        userLogRepository.save(
+            SecurityData.currentAuth?.name.orEmpty().let {
+                UserLog(
+                    user = it,
+                    action = "employees update",
+                )
+            }
+        )
         return modelAndView
     }
 
     @GetMapping("/employees/delete")
     fun deleteEmployee(@RequestParam employeeId: Long): String {
         employeeRepository.deleteById(employeeId)
+        userLogRepository.save(
+            SecurityData.currentAuth?.name.orEmpty().let {
+                UserLog(
+                    user = it,
+                    action = "employees delete",
+                )
+            }
+        )
         return "redirect:/employees"
     }
 
