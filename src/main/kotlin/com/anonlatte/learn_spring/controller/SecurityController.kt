@@ -3,6 +3,7 @@ package com.anonlatte.learn_spring.controller
 import com.anonlatte.learn_spring.db.entity.Role
 import com.anonlatte.learn_spring.db.entity.RoleNames
 import com.anonlatte.learn_spring.db.entity.User.Companion.toDto
+import com.anonlatte.learn_spring.db.entity.UserLog
 import com.anonlatte.learn_spring.domain.repository.RoleRepository
 import com.anonlatte.learn_spring.domain.repository.UserLogRepository
 import com.anonlatte.learn_spring.domain.service.UserService
@@ -14,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.servlet.ModelAndView
 
 @Controller
 class SecurityController(
@@ -59,7 +59,7 @@ class SecurityController(
         } else {
             userLogRepository.save(
                 SecurityContextHolder.getContext().authentication?.name.orEmpty().let {
-                    com.anonlatte.learn_spring.db.entity.UserLog(
+                    UserLog(
                         user = it,
                         action = "user created",
                     )
@@ -78,7 +78,7 @@ class SecurityController(
         model.addAttribute("currentUserEmail", currentUserEmail)
         userLogRepository.save(
             SecurityContextHolder.getContext().authentication?.name.orEmpty().let {
-                com.anonlatte.learn_spring.db.entity.UserLog(
+                UserLog(
                     user = it,
                     action = "users read",
                 )
@@ -92,7 +92,7 @@ class SecurityController(
         userService.deleteById(id)
         userLogRepository.save(
             SecurityContextHolder.getContext().authentication?.name.orEmpty().let {
-                com.anonlatte.learn_spring.db.entity.UserLog(
+                UserLog(
                     user = it,
                     action = "user deleted",
                 )
@@ -102,19 +102,22 @@ class SecurityController(
     }
 
     @RequestMapping("/users/updateRole")
-    fun changeRole(@RequestParam("userId") userId: Long): ModelAndView {
+    fun changeRole(
+        @RequestParam("userId") userId: Long,
+        model: Model
+    ): String {
         val isUserAdmin = userService.getById(userId)?.roles?.any { it.name == RoleNames.ROLE_ADMIN } == true
         userLogRepository.save(
             SecurityContextHolder.getContext().authentication?.name.orEmpty().let {
-                com.anonlatte.learn_spring.db.entity.UserLog(
+                UserLog(
                     user = it,
                     action = "user role change",
                 )
             }
         )
-        return ModelAndView("change-role")
-            .addObject("roleChange", RoleChangeDto(isUserAdmin))
-            .addObject("userId", userId)
+        model.addAttribute("userId", userId)
+            .addAttribute("roleChange", RoleChangeDto(isUserAdmin))
+        return "change-role"
     }
 
     @Transactional
@@ -123,21 +126,21 @@ class SecurityController(
         @RequestParam userId: Long,
         @ModelAttribute roleChange: RoleChangeDto
     ): String {
-
+        val isAdminChecked = roleChange.isAdmin == true
         userService.getById(userId)?.run {
             val roles: Set<Role> = roleRepository.findByName(RoleNames.ROLE_ADMIN)?.let {
-                if (roleChange.isAdmin == null) {
+                if (isAdminChecked) {
                     roles.plus(it)
                 } else {
                     roles.minus(it)
                 }
             }.orEmpty()
             userService.updateRoles(this.toDto(), roles)
-            logger.info("User $email has been updated to ${if (roleChange.isAdmin == null) "admin" else "user"}")
+            logger.info("${isAdminChecked}; User $email has been updated to ${if (isAdminChecked) "admin" else "user"}")
         }
         userLogRepository.save(
             SecurityContextHolder.getContext().authentication?.name.orEmpty().let {
-                com.anonlatte.learn_spring.db.entity.UserLog(
+                UserLog(
                     user = it,
                     action = "user role changed",
                 )

@@ -47,7 +47,12 @@
                             th:object="${roleChange}">
                         <div class="form-group mb-3">
                             <label class="rocker">
-                                <input id="cbRole" name="roleChange" th:checked="*{isAdmin}" type="checkbox">
+                                <input
+                                        id="isAdmin"
+                                        name="isAdmin"
+                                        th:checked="*{isAdmin}"
+                                        type="checkbox"
+                                >
                                 <span class="switch-left">Admin</span>
                                 <span class="switch-right">User</span>
                             </label>

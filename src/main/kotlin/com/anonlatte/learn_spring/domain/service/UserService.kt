@@ -15,5 +15,5 @@ interface UserService {
 
     fun deleteById(id: Long)
 
-    fun updateRoles(toDto: UserDto, roles: Set<Role>)
+    fun updateRoles(userDto: UserDto, roles: Set<Role>)
 }
